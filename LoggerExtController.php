@@ -62,7 +62,6 @@ class LoggerExtController extends Controller
 				$find = array('%m', '%c', '%a');
 				$replace = array($moduleId, $controllerId, $actionId);
 				$logFile = str_replace($find, $replace, $logFile);
-var_dump($logFile);
 				$route = Yii::app()->logext->route;
 
 				if ($route['class'] == 'FileDailyLogRoute') {
