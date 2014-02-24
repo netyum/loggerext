@@ -3,9 +3,14 @@ loggerext
 
 logger extensions for Yii1.x
 
-* Configure
+# INSTALLATION
+
+Move loggerext folder to extensions folder.
+
+# CONFIGURE
 
 In config/main.php or config/console.php
+
 ```
 'preload'=>array('log', 'logext'),
 'import' =>array(
@@ -15,52 +20,51 @@ In config/main.php or config/console.php
 'components' => array(
 	...
 	'logext'=>array(
-	        'class'=>'LoggerExt',
-	        'modules'=>array(
-	                '*'=>array(
-	                        'default'=>array(
-	                                'logFilePattern'=>'%m.%c.%a.log'
-	                        ),
-	                )
-	        ),
-	        'controllers'=>array(
-	                'site'=>array(
-	                        'logFileUseParam'=>true,  //enable param used in logfile name
-	                        'params'=>'view',  //Parameter Name,'view, name'，first request POST, next request GET
-	                        'logFilePattern'=>'%c.%a.%p.log',
-	                        'paramPattern'=>'%n_%v',
-	                        'joinCharacter'=>'.'
-	                ),
-	                '*'=>array(
-	                        'logFilePattern'=>'%c.%a.log'
-	                )
-	
-	        ),
+		'class'=>'LoggerExt',
+		'modules'=>array(
+			'*'=>array(
+				'default'=>array(
+					logFilePattern'=>'%m.%c.%a.log'
+				),
+			)
+		),
+		'controllers'=>array(
+			'site'=>array(
+				'logFileUseParam'=>true,  //enable param used in logfile name
+				//Parameter Name,'view, name'，first request POST, next request GET
+				'params'=>'view',  
+				'logFilePattern'=>'%c.%a.%p.log',
+				'paramPattern'=>'%n_%v',
+				'joinCharacter'=>'.'
+			),
+			'*'=>array(
+				'logFilePattern'=>'%c.%a.log'
+			)
+		),
 
 		// for console
-                'commands'=>array(
-                        'queue'=>array(
-                                'logFileUseParam'=>true,
-                                'params'=>'qname', 
-                                'logFilePattern'=>'console.%c.%a.%p.log',
-                                'paramPattern'=>'%n_%v',
-                                'joinCharacter'=>'.'
-                        ),
-                        '*'=>array(
-                                'logFilePattern'=>'%c.%a.log'
-                        )
-
-                ),
-	        'route'=>array(
-	                'class'=>'FileDailyLogRoute',
-	                'levels'=>'info', //log level
-	                'keepDays'=>7,  // keep log file at 7 days
-	        ),
+		'commands'=>array(
+			'queue'=>array(
+				'logFileUseParam'=>true,
+				'params'=>'qname', 
+				'logFilePattern'=>'console.%c.%a.%p.log',
+				'paramPattern'=>'%n_%v',
+				'joinCharacter'=>'.'
+			),
+			'*'=>array(
+				'logFilePattern'=>'%c.%a.log'
+	        )
+		),
+		'route'=>array(
+			'class'=>'FileDailyLogRoute',
+			'levels'=>'info', //log level
+			'keepDays'=>7,  // keep log file at 7 days
+		),
 	)
 )
 ```
 
-* Filename Pattern
+# FILENAME PATTERN
 
 * %m is moduleId
 * %c is controllerId / commandId
@@ -68,3 +72,48 @@ In config/main.php or config/console.php
 * %p is params is paramPattern 
   * %n params name 
   * %v params value
+
+# QUICK START
+
+create your controller and extend LoggerExtController
+
+e.g
+
+```
+class TestController extends LoggerExtController
+{
+	public function actionIndex() {
+		Yii::log('Hello Controller', CLogger::LEVEL_INFO);
+	}
+}
+```
+
+run it in browers
+
+```
+http://path/to/index.php?r=test
+```
+
+look to runtime folder and find test.index_(Y-m-d).log file.
+
+
+another create your command and extend LoggerExtCommand
+
+e.g.
+
+```
+class QueueController extends LoggerExtCommand
+{
+	public function actionWorker($qname) {
+		Yii::log('Hello Command', CLogger::LEVEL_INFO);
+	}
+}
+```
+
+run it in command line.
+
+```
+yiic queue worker --qname=default
+```
+
+look to runtime folder and find console.queue.worker.qname_default_(Y-m-d).log
