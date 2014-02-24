@@ -3,7 +3,7 @@ loggerext
 
 logger extensions for Yii1.x
 
-* Configure
+# Configure
 
 In config/main.php or config/console.php
 ```
@@ -26,7 +26,8 @@ In config/main.php or config/console.php
 	        'controllers'=>array(
 	                'site'=>array(
 	                        'logFileUseParam'=>true,  //enable param used in logfile name
-	                        'params'=>'view',  //Parameter Name,'view, name'，first request POST, next request GET
+	                        //Parameter Name,'view, name'，first request POST, next request GET
+	                        'params'=>'view',  
 	                        'logFilePattern'=>'%c.%a.%p.log',
 	                        'paramPattern'=>'%n_%v',
 	                        'joinCharacter'=>'.'
@@ -60,7 +61,7 @@ In config/main.php or config/console.php
 )
 ```
 
-* Filename Pattern
+# Filename Pattern
 
 * %m is moduleId
 * %c is controllerId / commandId
