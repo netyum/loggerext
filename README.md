@@ -24,7 +24,7 @@ In config/main.php or config/console.php
 		'modules'=>array(
 			'*'=>array(
 				'default'=>array(
-					logFilePattern'=>'%m.%c.%a.log'
+					'logFilePattern'=>'%m.%c.%a.log'
 				),
 			)
 		),
