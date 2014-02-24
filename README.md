@@ -7,7 +7,7 @@ logger extensions for Yii1.x
 
 Move loggerext folder to extensions folder.
 
-# CONFIGURE
+# CONFIGURATION
 
 In config/main.php or config/console.php
 
