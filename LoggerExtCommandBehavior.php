@@ -26,12 +26,12 @@ class LoggerExtCommandBehavior extends CConsoleCommandBehavior
                                 isset($logCommand['paramPattern']) &&
                                 isset($logCommand['joinCharacter'])
                         ) {
-                                $params = explode(',', $logCommmand['params']);
+                                $params = explode(',', $logCommand['params']);
                                 $joinCharacter = $logCommand['joinCharacter'];
                                 $paramPattern = $logCommand['paramPattern'];
                                 $pp = array();
 
-                        	$methodName = 'action'.$action;
+                        	$methodName = 'action'.$actionId;
                         	$method=new ReflectionMethod($event->sender,$methodName);
                         	$paramsName = array();
 				$paramsNow = array();
@@ -49,7 +49,7 @@ class LoggerExtCommandBehavior extends CConsoleCommandBehavior
                                                $v = $paramsNow[trim($key)];
                                        }
                                        else $v = NULL;
-                                       if (!is_null($v))
+                                       if (!is_null($v)) {
                                                $pp[] = str_replace(array('%n', '%v'), array(trim($key), $v), $paramPattern);
                           	       }
 				}
@@ -58,7 +58,6 @@ class LoggerExtCommandBehavior extends CConsoleCommandBehavior
                         $find = array('%c', '%a');
                         $replace = array($commandId, $actionId);
                         $logFile = str_replace($find, $replace, $logFile);
-var_dump($logFile);
                         $route = Yii::app()->logext->route;
 
                         if ($route['class'] == 'FileDailyLogRoute') {
