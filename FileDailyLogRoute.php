@@ -67,7 +67,8 @@ class FileDailyLogRoute extends CLogRoute
 	 */
 	public function setLogFile($value)
 	{
-		$this->_logFile=$value;
+		
+		$this->_logFile=$this->toFileName($value);
 	}
 
 	public function getKeepDays() {
@@ -135,5 +136,15 @@ class FileDailyLogRoute extends CLogRoute
 
 	protected function getDate() {
 		return date($this->getDatePattern(), time());
+	}
+
+	protected function toFileName($filename) {
+		$find = array('<', '>', '*', '?', '/', '\\', '"', '|');
+		$filename = str_replace($find, '', $filename);
+		$left_one = substr($filename, 0, 1);
+		if ($left_one == '.' && PHP_OS == 'WINNT') {
+			$filename = '_'.substr($filename, 1);
+		}
+		return $filename;
 	}
 }
