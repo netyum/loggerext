@@ -9,7 +9,8 @@ Move loggerext folder to extensions folder.
 
 # CONFIGURATION
 
-In config/main.php or config/console.php
+In config/main.php for web application
+
 
 ```
 'preload'=>array('log', 'logext'),
@@ -34,6 +35,7 @@ In config/main.php or config/console.php
 				//Parameter Name,'view, name'，first request POST, next request GET
 				'params'=>'view',  
 				'logFilePattern'=>'%c.%a.%p.log',
+				'logPathPattern'=>'%c',
 				'paramPattern'=>'%n_%v',
 				'joinCharacter'=>'.'
 			),
@@ -42,6 +44,29 @@ In config/main.php or config/console.php
 			)
 		),
 
+		'route'=>array(
+			'class'=>'FileDailyLogRoute',
+			'levels'=>'info', //log level
+			'keepDays'=>7,  // keep log file at 7 days
+		),
+	)
+)
+```
+
+In config/console.php for console application
+
+```
+'preload'=>array('log', 'logext'),
+'import' =>array(
+	...
+	'application.extensions.loggerext.*'
+),
+'components' => array(
+	...
+	'logext'=>array(
+		'class'=>'LoggerExt',
+		'autoFlush'=>1,
+		'autoDump'=>true,
 		// for console
 		'commands'=>array(
 			'queue'=>array(
@@ -53,12 +78,12 @@ In config/main.php or config/console.php
 			),
 			'*'=>array(
 				'logFilePattern'=>'%c.%a.log'
-	        )
-		),
+	       
 		'route'=>array(
 			'class'=>'FileDailyLogRoute',
 			'levels'=>'info', //log level
 			'keepDays'=>7,  // keep log file at 7 days
+			'logPath'=>'/data/logs'
 		),
 	)
 )
