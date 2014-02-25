@@ -31,6 +31,8 @@ class LoggerExtController extends Controller
 			else if (isset($logControllers['*'])) {
 				$logController = $logControllers['*'];
 			}
+            $logFile = "application.log";
+
 			if ( isset($logController['logFilePattern']) ) {
 				$pattern = $logController['logFilePattern'];
 				$logFile = $pattern;
@@ -62,16 +64,31 @@ class LoggerExtController extends Controller
 				$find = array('%m', '%c', '%a');
 				$replace = array($moduleId, $controllerId, $actionId);
 				$logFile = str_replace($find, $replace, $logFile);
-				$route = Yii::app()->logext->route;
+            }
 
-				if ($route['class'] == 'FileDailyLogRoute') {
-					$route['logFile'] = $logFile;
-					$route=Yii::createComponent($route);
-					$route->init();
-					Yii::app()->log->setRoutes(array('controller'=>$route));
-				}
+            $logPath = "";
+            if ( isset($logController['logPathPattern'])) {
+                $logPath = $logController['logPathPattern'];
 
-			
+                $find = array('%m', '%c', '%a');
+                $replace = array($moduleId, $controllerId, $actionId);
+				$logPath = str_replace($find, $replace, $logPath);
+
+                $find = array('<', '>', '*', '?', '/', '\\', '"', '|');
+                $logPath = trim(str_replace($find, '', $logPath));
+            }
+
+			$route = Yii::app()->logext->route;
+
+            if ($route['class'] == 'FileDailyLogRoute') {
+                $route['logFile'] = $logFile;
+                $route=Yii::createComponent($route);
+                $route->init();
+
+                if ($logPath!="") {
+                    $route->logPath = $route->logPath.'/'.$logPath;
+                }
+                Yii::app()->log->setRoutes(array('controller'=>$route));
 			} 
 			return true;
 		}
