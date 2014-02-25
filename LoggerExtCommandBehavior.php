@@ -54,22 +54,28 @@ class LoggerExtCommandBehavior extends CConsoleCommandBehavior
                         $pp[] = str_replace(array('%n', '%v'), array(trim($key), $v), $paramPattern);
                     }
 				}
+
 				$logFile = str_replace('%p', join($joinCharacter, $pp), $pattern);
-                $find = array('%c', '%a');
-                $replace = array($commandId, $actionId);
-                $logFile = str_replace($find, $replace, $logFile);
 			}
+            $find = array('%c', '%a');
+            $replace = array($commandId, $actionId);
+            $logFile = str_replace($find, $replace, $logFile);
         }
 
         $logPath = "";
         if ( isset($logCommand['logPathPattern'])) {
             $logPath = $logCommand['logPathPattern'];
 
-            $find = array('%m', '%c', '%a');
-            $replace = array($moduleId, $controllerId, $actionId);
+            $find = array('%c', '%a');
+            $replace = array($commandId, $actionId);
             $logPath = str_replace($find, $replace, $logPath);
 
-            $find = array('<', '>', '*', '?', '/', '\\', '"', '|');
+            $find = array('<', '>', '*', '?', '"', '|');
+            $logPath = trim(str_replace($find, '', $logPath));
+
+            if (PHP_OS == 'WINNT')
+                $find = '/';
+            else $find = '\\';
             $logPath = trim(str_replace($find, '', $logPath));
         }
 

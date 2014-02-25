@@ -74,8 +74,14 @@ class LoggerExtController extends Controller
                 $replace = array($moduleId, $controllerId, $actionId);
 				$logPath = str_replace($find, $replace, $logPath);
 
-                $find = array('<', '>', '*', '?', '/', '\\', '"', '|');
+                $find = array('<', '>', '*', '?', '"', '|');
                 $logPath = trim(str_replace($find, '', $logPath));
+
+                if (PHP_OS == 'WINNT')
+                    $find = '/';
+                else $find = '\\';
+                $logPath = trim(str_replace($find, '', $logPath));
+
             }
 
 			$route = Yii::app()->logext->route;
