@@ -2,22 +2,22 @@
 
 class LoggerExtCommandBehavior extends CConsoleCommandBehavior
 {
-	public function beforeAction($event)
-	{
+    public function beforeAction($event)
+    {
         $actionId = strtolower($event->action);
         $commandId = strtolower($event->sender->getName());
-		$logCommands = Yii::app()->logext->commands;
+        $logCommands = Yii::app()->logext->commands;
 
-		$logCommand = array();
+        $logCommand = array();
         if (isset($logCommands[$commandId]) ) {
             $logCommand = $logCommands[$commandId];
         }
         else if (isset($logCommands['*'])) {
             $logCommand = $logCommands['*'];
-		}
+        }
 
         $logFile = "console.log";
-		if ( isset($logCommand['logFilePattern']) ) {
+        if ( isset($logCommand['logFilePattern']) ) {
             $pattern = $logCommand['logFilePattern'];
             $logFile = $pattern;
             if (
@@ -35,14 +35,14 @@ class LoggerExtCommandBehavior extends CConsoleCommandBehavior
                 $methodName = 'action'.$actionId;
                 $method=new ReflectionMethod($event->sender,$methodName);
                 $paramsName = array();
-				$paramsNow = array();
+                $paramsNow = array();
                 foreach($method->getParameters() as $i=>$param)
                 {
-	                $name=$param->getName();
-	                array_push($paramsName, $name);
-				}
+                    $name=$param->getName();
+                    array_push($paramsName, $name);
+                }
                 for($i=0; $i<count($paramsName); $i++) {
-					$paramsNow[$paramsName[$i]] = $event->params[$i];
+                    $paramsNow[$paramsName[$i]] = $event->params[$i];
                 }
 
                 foreach($params as $key ) {
@@ -53,10 +53,10 @@ class LoggerExtCommandBehavior extends CConsoleCommandBehavior
                     if (!is_null($v)) {
                         $pp[] = str_replace(array('%n', '%v'), array(trim($key), $v), $paramPattern);
                     }
-				}
+                }
 
-				$logFile = str_replace('%p', join($joinCharacter, $pp), $pattern);
-			}
+                $logFile = str_replace('%p', join($joinCharacter, $pp), $pattern);
+            }
             $find = array('%c', '%a');
             $replace = array($commandId, $actionId);
             $logFile = str_replace($find, $replace, $logFile);
@@ -92,6 +92,6 @@ class LoggerExtCommandBehavior extends CConsoleCommandBehavior
             Yii::app()->log->setRoutes(array('controller'=>$route));
         }
 
-	}
+    }
 
 }
