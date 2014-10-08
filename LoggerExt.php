@@ -4,7 +4,6 @@ class LoggerExt extends CApplicationComponent
 {
     public $autoFlush=10000;
     public $autoDump=false;
-
     public $modules = array();
     public $controllers = array();
     public $commands = array();

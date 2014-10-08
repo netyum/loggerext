@@ -1,6 +1,6 @@
 <?php
 
-class LoggerExtController extends Controller
+class LoggerExtController extends CController
 {
 
     public function beforeAction($action)

@@ -11,8 +11,7 @@ class LoggerExtCommandBehavior extends CConsoleCommandBehavior
         $logCommand = array();
         if (isset($logCommands[$commandId]) ) {
             $logCommand = $logCommands[$commandId];
-        }
-        else if (isset($logCommands['*'])) {
+        } elseif (isset($logCommands['*'])) {
             $logCommand = $logCommands['*'];
         }
 
@@ -26,7 +25,7 @@ class LoggerExtCommandBehavior extends CConsoleCommandBehavior
                 isset($logCommand['params']) &&
                 isset($logCommand['paramPattern']) &&
                 isset($logCommand['joinCharacter'])
-            ) {
+                ) {
                 $params = explode(',', $logCommand['params']);
                 $joinCharacter = $logCommand['joinCharacter'];
                 $paramPattern = $logCommand['paramPattern'];
@@ -39,7 +38,7 @@ class LoggerExtCommandBehavior extends CConsoleCommandBehavior
                 foreach($method->getParameters() as $i=>$param)
                 {
                     $name=$param->getName();
-                    array_push($paramsName, $name);
+                    array_push($paramsName, $name)
                 }
                 for($i=0; $i<count($paramsName); $i++) {
                     $paramsNow[$paramsName[$i]] = $event->params[$i];
@@ -48,8 +47,10 @@ class LoggerExtCommandBehavior extends CConsoleCommandBehavior
                 foreach($params as $key ) {
                     if (isset($paramsNow[trim($key)])) {
                         $v = $paramsNow[trim($key)];
+                    } else {
+                        $v = null;
                     }
-                    else $v = NULL;
+
                     if (!is_null($v)) {
                         $pp[] = str_replace(array('%n', '%v'), array(trim($key), $v), $paramPattern);
                     }
@@ -69,18 +70,20 @@ class LoggerExtCommandBehavior extends CConsoleCommandBehavior
             $find = array('%c', '%a');
             $replace = array($commandId, $actionId);
             $logPath = str_replace($find, $replace, $logPath);
-
+    
             $find = array('<', '>', '*', '?', '"', '|');
             $logPath = trim(str_replace($find, '', $logPath));
 
-            if (PHP_OS == 'WINNT')
+            if (PHP_OS == 'WINNT') {
                 $find = '/';
-            else $find = '\\';
+            } else {
+                $find = '\\';
+            }
             $logPath = trim(str_replace($find, '', $logPath));
         }
 
         $route = Yii::app()->logext->route;
-        
+    
         if ($route['class'] == 'FileDailyLogRoute') {
             $route['logFile'] = $logFile;
             $route=Yii::createComponent($route);
@@ -91,7 +94,5 @@ class LoggerExtCommandBehavior extends CConsoleCommandBehavior
             }
             Yii::app()->log->setRoutes(array('controller'=>$route));
         }
-
     }
-
 }
